@@ -40,8 +40,8 @@ def schema_post_save(sender, instance, created, **kwargs):
 
 def schema_post_delete(sender, instance, **kwargs):
     entity = instance.get_entity()
-    db.delete_table(entity)
-    registry.cache.delete(entity._meta.app_label, entity._meta.object_name)
     ContentType.objects.get_for_model(entity).delete()
     ContentType.objects.clear_cache()
+    registry.cache.delete(entity._meta.app_label, entity._meta.object_name)
+    db.delete_table(entity)
     signals.dynamic_model_deleted.send(sender, entity=entity)

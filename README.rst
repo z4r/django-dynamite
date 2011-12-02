@@ -8,13 +8,14 @@ Thx to `Will Hardy`_ for this fantastic paper `Runtime Dynamic Models Documentat
 Quick start
 ===========
 
-1. Clone this repos
-2. Install the package with::
-
+    git clone git://github.com/z4r/django-dynamite.git
+    cd django-dynamite
     python setup.py install
 
-3. Take a look to ``example`` project, try it and enjoy::
+Take a look to ``example`` project, try it and enjoy::
 
+    cd example
+    python manage.py test
     python manage.py syncdb
     python manage.py runserver
 
