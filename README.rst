@@ -8,6 +8,8 @@ Thx to `Will Hardy`_ for this fantastic paper `Runtime Dynamic Models Documentat
 Quick start
 ===========
 
+Clone and install::
+
     git clone git://github.com/z4r/django-dynamite.git
     cd django-dynamite
     python setup.py install
@@ -24,7 +26,7 @@ Building / Installing
 
 You can just use ``setup.py`` to build and install ``django-dynamite``::
 
-   prompt $ python setup.py bdist_egg
+   $ python setup.py bdist_egg
 
 Once built, you can use easy_install on the python egg.
 
@@ -34,7 +36,7 @@ Documentation
 You can generate your own local copy using
 `Sphinx`_ trough the setup.py::
 
-   prompt $ python setup.py build_sphinx
+   $ python setup.py build_sphinx
 
 .. _Will Hardy: https://github.com/willhardy
 .. _Runtime Dynamic Models Documentation: http://2011.djangocon.eu/media/slides/RuntimeDynamicModels.pdf
