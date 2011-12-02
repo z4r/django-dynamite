@@ -19,3 +19,4 @@ Documentation/
 .tox/
 .ropeproject/
 .idea/
+*.sh

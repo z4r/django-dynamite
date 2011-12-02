@@ -38,6 +38,9 @@ You can generate your own local copy using
 
    $ python setup.py build_sphinx
 
+Or simply click `Dynamite Documentation`_
+
 .. _Will Hardy: https://github.com/willhardy
 .. _Runtime Dynamic Models Documentation: http://2011.djangocon.eu/media/slides/RuntimeDynamicModels.pdf
 .. _Sphinx: http://sphinx.pocoo.org
+.. _Dynamite Documentation: http://z4r.github.com/django-dynamite/
