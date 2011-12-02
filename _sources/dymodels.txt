@@ -1,0 +1,6 @@
+Abstract Dynamic Models
+=======================
+
+.. automodule:: dynamite.dymodels
+    :show-inheritance:
+    :members:

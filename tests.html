@@ -1,0 +1,165 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>7. sphinx.ext.doctest – Test snippets in the documentation &mdash; django-dynamite 0.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-dynamite 0.4.0 documentation" href="index.html" />
+    <link rel="prev" title="4. Examples" href="examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="4. Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-dynamite 0.4.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-sphinx.ext.doctest">
+<span id="sphinx-ext-doctest-test-snippets-in-the-documentation"></span><h1>7. <a class="reference internal" href="#module-sphinx.ext.doctest" title="sphinx.ext.doctest: Test snippets in the documentation."><tt class="xref py py-mod docutils literal"><span class="pre">sphinx.ext.doctest</span></tt></a> &#8211; Test snippets in the documentation<a class="headerlink" href="#module-sphinx.ext.doctest" title="Permalink to this headline">¶</a></h1>
+<p id="index-0">This extension allows you to test snippets in the documentation in a natural
+way.  It works by collecting specially-marked up code blocks and running them as
+doctest tests.</p>
+<p>Within one document, test code is partitioned in <em>groups</em>, where each group
+consists of:</p>
+<ul class="simple">
+<li>zero or more <em>setup code</em> blocks (e.g. importing the module to test)</li>
+<li>one or more <em>test</em> blocks</li>
+</ul>
+<p>When building the docs with the <tt class="docutils literal"><span class="pre">doctest</span></tt> builder, groups are collected for
+each document and run one after the other, first executing setup code blocks,
+then the test blocks in the order they appear in the file.</p>
+<p>There are two kinds of test blocks:</p>
+<ul class="simple">
+<li><em>doctest-style</em> blocks mimic interactive sessions by interleaving Python code
+(including the interpreter prompt) and output.</li>
+<li><em>code-output-style</em> blocks consist of an ordinary piece of Python code, and
+optionally, a piece of output for that code.</li>
+</ul>
+<p>The doctest extension provides four directives.  The <em>group</em> argument is
+interpreted as follows: if it is empty, the block is assigned to the group named
+<tt class="docutils literal"><span class="pre">default</span></tt>.  If it is <tt class="docutils literal"><span class="pre">*</span></tt>, the block is assigned to all groups (including the
+<tt class="docutils literal"><span class="pre">default</span></tt> group).  Otherwise, it must be a comma-separated list of group
+names.</p>
+<p>The following is an example for the usage of the directives.  The test via
+<a href="#id1"><span class="problematic" id="id2">:dir:`doctest`</span></a> and the test via <a href="#id3"><span class="problematic" id="id4">:dir:`testcode`</span></a> and <a href="#id5"><span class="problematic" id="id6">:dir:`testoutput`</span></a> are
+completely equivalent.</p>
+<div class="highlight-rest"><div class="highlight"><pre><span class="gh">The parrot module</span>
+<span class="gh">=================</span>
+
+<span class="p">..</span> <span class="ow">testsetup</span><span class="p">::</span> *
+
+   import parrot
+
+The parrot module is a module about parrots.
+
+Doctest example:
+
+<span class="p">..</span> <span class="ow">doctest</span><span class="p">::</span>
+
+   &gt;&gt;&gt; parrot.voom(3000)
+   This parrot wouldn&#39;t voom if you put 3000 volts through it!
+
+Test-Output example:
+
+<span class="p">..</span> <span class="ow">testcode</span><span class="p">::</span>
+
+   parrot.voom(3000)
+
+This would output:
+
+<span class="p">..</span> <span class="ow">testoutput</span><span class="p">::</span>
+
+   This parrot wouldn&#39;t voom if you put 3000 volts through it!
+</pre></div>
+</div>
+<p>There are also these config values for customizing the doctest extension:</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="previous chapter">4. Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tests.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="4. Examples"
+             >previous</a> |</li>
+        <li><a href="index.html">django-dynamite 0.4.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Andrea de Marco.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
