@@ -1,0 +1,76 @@
+[
+    {
+        "pk": 1,
+        "model": "auth.user",
+        "fields": {
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": true,
+            "is_staff": true,
+            "last_login": "2011-11-25 06:11:47",
+            "groups": [],
+            "user_permissions": [],
+            "password": "sha1$fd65e$5166a64da3117b1bab0f64cf9e6d08a6056e1619",
+            "email": "a@a.it", 
+            "date_joined": "2011-11-24 09:46:24"
+        }
+    },
+    {
+        "pk": 1, 
+        "model": "survey.survey", 
+        "fields": {
+            "name": "Personal Data", 
+            "slug": "personal-data"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "survey.question", 
+        "fields": {
+            "slug": "first-name", 
+            "name": "First Name", 
+            "required": true, 
+            "rank": 5, 
+            "choices": "", 
+            "attr_type": "ShortText", 
+            "schema": 1
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "survey.question", 
+        "fields": {
+            "slug": "last-name", 
+            "name": "Last Name", 
+            "required": true, 
+            "rank": 5, 
+            "choices": "", 
+            "attr_type": "ShortText", 
+            "schema": 1
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "survey.question", 
+        "fields": {
+            "slug": "age", 
+            "name": "Age", 
+            "required": false, 
+            "rank": 5, 
+            "choices": "", 
+            "attr_type": "Integer", 
+            "schema": 1
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "survey.response_personal_data",
+        "fields": {
+            "first_name": "John",
+            "last_name": "Doe",
+            "age": 31
+        }
+    }
+]
