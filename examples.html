@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4. Examples &mdash; django-dynamite 0.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-dynamite 0.4.0 documentation" href="index.html" />
+    <link rel="prev" title="3. Signals" href="signals.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="signals.html" title="3. Signals"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-dynamite 0.4.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<h1>4. Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="survey-system">
+<h1>5. Survey System<a class="headerlink" href="#survey-system" title="Permalink to this headline">¶</a></h1>
+<p><em>survey.models.py</em></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">dynamite.models</span> <span class="kn">import</span> <span class="n">AbstractSchema</span><span class="p">,</span> <span class="n">AbstractAttribute</span><span class="p">,</span> <span class="n">AbstractEntity</span>
+<span class="kn">from</span> <span class="nn">dynamite.registry</span> <span class="kn">import</span> <span class="n">register</span>
+
+<span class="k">class</span> <span class="nc">Survey</span><span class="p">(</span><span class="n">AbstractSchema</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="s">&#39;survey&#39;</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s">&#39;surveys&#39;</span>
+
+<span class="k">class</span> <span class="nc">Question</span><span class="p">(</span><span class="n">AbstractAttribute</span><span class="p">):</span>
+    <span class="n">rank</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PositiveIntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Survey</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;rank&#39;</span><span class="p">]</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="s">&#39;question&#39;</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s">&#39;questions&#39;</span>
+
+<span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">AbstractEntity</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">abstract</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="s">&#39;response&#39;</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s">&#39;responses&#39;</span>
+
+<span class="n">register</span><span class="p">(</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">Survey</span><span class="p">,</span>
+    <span class="n">attribute</span> <span class="o">=</span> <span class="n">Question</span><span class="p">,</span>
+    <span class="n">entity</span> <span class="o">=</span> <span class="n">Response</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><em>survey.models.py</em></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">dynamite.admin</span> <span class="kn">import</span> <span class="n">register</span>
+<span class="kn">from</span> <span class="nn">survey.models</span> <span class="kn">import</span> <span class="n">Survey</span>
+
+<span class="n">register</span><span class="p">(</span><span class="n">Survey</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contenttype-and-generic">
+<h1>6. ContentType and generic<a class="headerlink" href="#contenttype-and-generic" title="Permalink to this headline">¶</a></h1>
+<p><em>skill.models.py</em></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib.contenttypes.models</span> <span class="kn">import</span> <span class="n">ContentType</span>
+<span class="kn">from</span> <span class="nn">django.db.models.signals</span> <span class="kn">import</span> <span class="n">post_save</span>
+<span class="kn">from</span> <span class="nn">django.contrib.contenttypes</span> <span class="kn">import</span> <span class="n">generic</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">dynamite.models</span> <span class="kn">import</span> <span class="n">AbstractSchema</span><span class="p">,</span> <span class="n">AbstractEntity</span>
+<span class="kn">from</span> <span class="nn">dynamite.registry</span> <span class="kn">import</span> <span class="n">register</span>
+
+<span class="k">class</span> <span class="nc">Worker</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">cf</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">content_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">ContentType</span><span class="p">)</span>
+    <span class="n">object_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+    <span class="n">content_object</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">GenericForeignKey</span><span class="p">(</span><span class="s">&#39;content_type&#39;</span><span class="p">,</span> <span class="s">&#39;object_id&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cf</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;cf&#39;</span><span class="p">,)</span>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;content_type&#39;</span><span class="p">,</span> <span class="s">&#39;object_id&#39;</span><span class="p">)</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;worker&#39;</span><span class="p">)</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;workers&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">SkilledWorker</span><span class="p">(</span><span class="n">AbstractEntity</span><span class="p">):</span>
+    <span class="n">cf</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">GenericRelation</span><span class="p">(</span><span class="n">Worker</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">abstract</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cf</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;skilled worker&#39;</span><span class="p">)</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;skilled workers&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">update_item</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">SkilledWorker</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">created</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">Worker</span><span class="p">()</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">cf</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">cf</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">instance</span><span class="p">))</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">object_id</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">post_save</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">update_item</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">SkillGroup</span><span class="p">(</span><span class="n">AbstractSchema</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;skill group&#39;</span><span class="p">)</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;skill groups&#39;</span><span class="p">)</span>
+
+<span class="n">register</span><span class="p">(</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">SkillGroup</span><span class="p">,</span>
+    <span class="n">entity</span> <span class="o">=</span> <span class="n">SkilledWorker</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><em>skill.admin.py</em></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">skill.models</span> <span class="kn">import</span> <span class="n">Worker</span><span class="p">,</span> <span class="n">SkillGroup</span>
+<span class="kn">from</span> <span class="nn">dynamite.admin</span> <span class="kn">import</span> <span class="n">register</span>
+
+<span class="k">class</span> <span class="nc">WorkerAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;cf&#39;</span><span class="p">]</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;link_to_content&#39;</span><span class="p">,</span> <span class="s">&#39;content_type&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">link_to_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">&#39;content_object&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s">u&#39;&lt;a href=&quot;../../</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&quot;&gt;</span><span class="si">%s</span><span class="s">&lt;/a&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">module_name</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">pk</span><span class="p">,</span>
+            <span class="n">target</span>
+        <span class="p">)</span>
+    <span class="n">link_to_content</span><span class="o">.</span><span class="n">__name__</span> <span class="o">=</span> <span class="s">&#39;CF&#39;</span>
+    <span class="n">link_to_content</span><span class="o">.</span><span class="n">allow_tags</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">link_to_content</span><span class="o">.</span><span class="n">admin_order_field</span> <span class="o">=</span> <span class="s">&#39;cf&#39;</span>
+
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Worker</span><span class="p">,</span> <span class="n">WorkerAdmin</span><span class="p">)</span>
+<span class="n">register</span><span class="p">(</span><span class="n">SkillGroup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4. Examples</a></li>
+<li><a class="reference internal" href="#survey-system">5. Survey System</a></li>
+<li><a class="reference internal" href="#contenttype-and-generic">6. ContentType and generic</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="signals.html"
+                        title="previous chapter">3. Signals</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="signals.html" title="3. Signals"
+             >previous</a> |</li>
+        <li><a href="index.html">django-dynamite 0.4.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Andrea de Marco.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

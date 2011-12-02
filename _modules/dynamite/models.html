@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>dynamite.models &mdash; django-dynamite 0.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="django-dynamite 0.4.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">django-dynamite 0.4.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for dynamite.models</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">signals</span>
+<span class="kn">from</span> <span class="nn">dynamite</span> <span class="kn">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">handlers</span><span class="p">,</span> <span class="n">registry</span>
+
+<div class="viewcode-block" id="AbstractSchema"><a class="viewcode-back" href="../../models.html#dynamite.models.AbstractSchema">[docs]</a><span class="k">class</span> <span class="nc">AbstractSchema</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This abstract model represents the Tables container (As a Database).</span>
+
+<span class="sd">You should inherit from this class when you want to start a dynamical model system.</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    from dynamite.models import AbstractSchema</span>
+<span class="sd">    from dynamite.registry import register</span>
+
+<span class="sd">    class Survey(AbstractSchema):</span>
+<span class="sd">        class Meta:</span>
+<span class="sd">            verbose_name = &#39;survey&#39;</span>
+<span class="sd">            verbose_name_plural = &#39;surveys&#39;</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    To activate this schema remember to register it in `yourapp.models` with:</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    register(</span>
+<span class="sd">        schema = Survey,</span>
+<span class="sd">    )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span> <span class="o">=</span> <span class="mi">255</span><span class="p">)</span>
+    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">_super_entity</span> <span class="o">=</span> <span class="bp">NotImplemented</span>
+    <span class="n">_attribute</span> <span class="o">=</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">abstract</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">entity_cls</span><span class="p">,</span> <span class="n">attribute_cls</span><span class="p">):</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">_super_entity</span> <span class="o">=</span> <span class="n">entity_cls</span> <span class="ow">or</span> <span class="n">AbstractEntity</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span> <span class="o">=</span> <span class="n">attribute_cls</span> <span class="ow">or</span> <span class="n">AbstractAttribute</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">unique_together</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">unique_together</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">ordering</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">ordering</span> <span class="ow">or</span> <span class="n">AbstractSchema</span><span class="o">.</span><span class="n">Meta</span><span class="o">.</span><span class="n">ordering</span>
+        <span class="k">for</span> <span class="n">ut</span> <span class="ow">in</span> <span class="n">AbstractAttribute</span><span class="o">.</span><span class="n">Meta</span><span class="o">.</span><span class="n">unique_together</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ut</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">unique_together</span><span class="p">:</span>
+                <span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">unique_together</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ut</span><span class="p">)</span>
+        <span class="n">signals</span><span class="o">.</span><span class="n">pre_save</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">handlers</span><span class="o">.</span><span class="n">attribute_pre_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span>
+        <span class="p">)</span>
+        <span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">handlers</span><span class="o">.</span><span class="n">attribute_post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span>
+        <span class="p">)</span>
+        <span class="n">signals</span><span class="o">.</span><span class="n">pre_delete</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">handlers</span><span class="o">.</span><span class="n">attribute_pre_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span>
+        <span class="p">)</span>
+        <span class="n">signals</span><span class="o">.</span><span class="n">post_delete</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">handlers</span><span class="o">.</span><span class="n">attribute_post_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">cls</span><span class="o">.</span><span class="n">_attribute</span>
+        <span class="p">)</span>
+        <span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">handlers</span><span class="o">.</span><span class="n">schema_post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">cls</span>
+        <span class="p">)</span>
+        <span class="n">signals</span><span class="o">.</span><span class="n">post_delete</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="n">handlers</span><span class="o">.</span><span class="n">schema_post_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">cls</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">entity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regenerate</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slug</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">,</span> <span class="s">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;ascii&#39;</span><span class="p">,</span> <span class="s">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">app_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_super_entity</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_super_entity</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&#39;_&#39;</span> <span class="o">+</span><span class="n">name</span>
+
+        <span class="n">cached_model</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app_name</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">regenerate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cached_model</span>
+
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;__module__&#39;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_super_entity</span><span class="p">,</span> <span class="s">&#39;__module__&#39;</span><span class="p">,</span>  <span class="n">__name__</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+            <span class="n">app_label</span> <span class="o">=</span> <span class="n">app_name</span>
+            <span class="n">verbose_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="nb">unicode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_super_entity</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">verbose_name</span><span class="p">)</span>
+        <span class="n">attrs</span><span class="p">[</span><span class="s">&#39;Meta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Meta</span>
+
+        <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attribute</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="s">&#39;schema&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">related</span><span class="o">.</span><span class="n">get_accessor_name</span><span class="p">())</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">field_name</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="n">slug</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">,</span><span class="s">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;ascii&#39;</span><span class="p">,</span> <span class="s">&#39;ignore&#39;</span><span class="p">)</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="n">get_field</span><span class="p">()</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_super_entity</span><span class="p">,),</span> <span class="n">attrs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span>
+</div>
+<div class="viewcode-block" id="AbstractAttribute"><a class="viewcode-back" href="../../models.html#dynamite.models.AbstractAttribute">[docs]</a><span class="k">class</span> <span class="nc">AbstractAttribute</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This abstract model represents the table&#39;s fields template.</span>
+
+<span class="sd">You should inherit from this class when you want to add something to this template.</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    from django.db import models</span>
+<span class="sd">    from dynamite.models import AbstractSchema, AbstractAttribute</span>
+<span class="sd">    from dynamite.registry import register</span>
+
+<span class="sd">    class Survey(AbstractSchema):</span>
+<span class="sd">        class Meta:</span>
+<span class="sd">            verbose_name = &#39;survey&#39;</span>
+<span class="sd">            verbose_name_plural = &#39;surveys&#39;</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    You have to make a foreign key through the schema:</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    class Question(AbstractAttribute):</span>
+<span class="sd">        rank = models.PositiveIntegerField(default=5)</span>
+<span class="sd">        schema = models.ForeignKey(Survey)</span>
+
+<span class="sd">        class Meta:</span>
+<span class="sd">            ordering = [&#39;rank&#39;]</span>
+<span class="sd">            verbose_name = &#39;question&#39;</span>
+<span class="sd">            verbose_name_plural = &#39;questions&#39;</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    To activate this schema remember to register it in `yourapp.models` with:</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    register(</span>
+<span class="sd">        schema = Survey,</span>
+<span class="sd">        attribute = Question,</span>
+<span class="sd">    )</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    At the moment an Attribute can be:</span>
+<span class="sd">        * Short text</span>
+<span class="sd">        * Long text</span>
+<span class="sd">        * Number</span>
+<span class="sd">        * Decimal number</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span>      <span class="o">=</span> <span class="bp">NotImplemented</span>
+    <span class="n">name</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">slug</span>        <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">()</span>
+    <span class="n">attr_type</span>   <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">fields</span><span class="o">.</span><span class="n">ATTR_TYPES</span><span class="p">)</span>
+    <span class="n">choices</span>     <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                    <span class="n">help_text</span><span class="o">=</span><span class="s">&quot;comma separated choices, keep them shortish&quot;</span><span class="p">)</span>
+    <span class="n">required</span>    <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_field</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;blank&#39;</span> <span class="p">:</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">,</span>
+            <span class="s">&#39;verbose_name&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;choices&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">)]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">fields</span><span class="o">.</span><span class="n">ATTR_FIELDS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attr_type</span><span class="p">](</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">abstract</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">unique_together</span> <span class="o">=</span>  <span class="p">((</span><span class="s">&#39;schema&#39;</span><span class="p">,</span> <span class="s">&#39;slug&#39;</span><span class="p">),)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">factory</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="s">&#39;Attribute&#39;</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">cls</span><span class="p">,),</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">schema</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">schema</span><span class="p">),</span>
+                <span class="n">__module__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s">&#39;__module__&#39;</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AbstractEntity"><a class="viewcode-back" href="../../models.html#dynamite.models.AbstractEntity">[docs]</a><span class="k">class</span> <span class="nc">AbstractEntity</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This abstract model represents the Table.</span>
+
+<span class="sd">You should inherit from this class when you want something in common in your schema.</span>
+<span class="sd">For example you want share uniqueness of primary keys</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    from django.db import models</span>
+<span class="sd">    from dynamite.models import AbstractSchema, AbstractEntity</span>
+<span class="sd">    from dynamite.registry import register</span>
+
+<span class="sd">    class Survey(AbstractSchema):</span>
+<span class="sd">        class Meta:</span>
+<span class="sd">            verbose_name = &#39;survey&#39;</span>
+<span class="sd">            verbose_name_plural = &#39;surveys&#39;</span>
+
+<span class="sd">    class Response(AbstractEntity):</span>
+<span class="sd">        name = models.CharFields(primary_key = True)</span>
+<span class="sd">        class Meta:</span>
+<span class="sd">            abstract = True</span>
+<span class="sd">            verbose_name = &#39;response&#39;</span>
+<span class="sd">            verbose_name_plural = &#39;responses&#39;</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    To activate this schema remember to register it in `yourapp.models` with:</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    register(</span>
+<span class="sd">        schema = Survey,</span>
+<span class="sd">        entity = Response,</span>
+<span class="sd">    )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">abstract</span> <span class="o">=</span> <span class="bp">True</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">django-dynamite 0.4.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Andrea de Marco.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
