@@ -1,5 +1,5 @@
 __author__ = "Andrea de Marco <24erre@gmail.com>"
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 __classifiers__ = [
     'Development Status :: 4 - Beta',
     'Framework :: Django',
