@@ -1,3 +1,4 @@
+========================
 Dynamic models framework
 ========================
 
@@ -35,7 +36,7 @@ Take a look to ``example`` project, try it and enjoy::
     python manage.py syncdb
     python manage.py runserver
 
-.. documentation::
+.. _documentation::
 
 Documentation
 =============
