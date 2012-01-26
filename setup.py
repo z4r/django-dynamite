@@ -17,7 +17,7 @@ classifiers = pkg.__classifiers__
 
 readme = open(os.path.join(wd, 'README.rst'),'r').readlines()
 description = readme[1]
-long_description = '\n'.join(readme[3:])
+long_description = '\n'.join(readme)
 
 try:
     reqs = open(os.path.join(os.path.dirname(__file__), 'requirements.txt')).read()
