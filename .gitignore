@@ -1,0 +1,7 @@
+.idea/*
+_static/*
+dist/*
+*.egg-info
+docs/*
+dynamite/*
+example/*

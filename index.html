@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>django-dynamite’s docs &mdash; django-dynamite 0.4.0 documentation</title>
+    <title>django-dynamite’s docs &mdash; django-dynamite 0.4.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.4.0',
+        VERSION:     '0.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="django-dynamite 0.4.0 documentation" href="#" />
+    <link rel="top" title="django-dynamite 0.4.1 documentation" href="#" />
     <link rel="next" title="1. Abstract Dynamic Models" href="models.html" /> 
   </head>
   <body>
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="models.html" title="1. Abstract Dynamic Models"
              accesskey="N">next</a> |</li>
-        <li><a href="#">django-dynamite 0.4.0 documentation</a> &raquo;</li> 
+        <li><a href="#">django-dynamite 0.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -59,7 +59,7 @@
 <tr class="field-odd field"><th class="field-name">abstract:</th><td class="field-body"><p class="first">Django Dynamic Models Framework</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">version:</th><td class="field-body"><p class="first">0.4.0</p>
+<tr class="field-even field"><th class="field-name">version:</th><td class="field-body"><p class="first">0.4.1</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">author:</th><td class="field-body"><p class="first">Andrea de Marco &lt;<a class="reference external" href="mailto:24erre&#37;&#52;&#48;gmail&#46;com">24erre<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
@@ -82,32 +82,31 @@ along with this program.  If not, see &lt;<a class="reference external" href="ht
 </tr>
 </tbody>
 </table>
-</div>
 <div class="section" id="dynamic-models-framework">
-<h1>Dynamic models framework<a class="headerlink" href="#dynamic-models-framework" title="Permalink to this headline">¶</a></h1>
+<h2>Dynamic models framework<a class="headerlink" href="#dynamic-models-framework" title="Permalink to this headline">¶</a></h2>
 <p>This package provides a module to create dynamic models in django and use it in view and admin interface.</p>
 <p>Thx to <a class="reference external" href="https://github.com/willhardy">Will Hardy</a> for this fantastic paper <a class="reference external" href="http://2011.djangocon.eu/media/slides/RuntimeDynamicModels.pdf">Runtime Dynamic Models Documentation</a></p>
 </div>
-<div class="section" id="quick-start">
-<h1>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="installation">
+<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <p>Clone and install:</p>
 <div class="highlight-python"><pre>git clone git://github.com/z4r/django-dynamite.git
 cd django-dynamite
 python setup.py install</pre>
 </div>
+<p>Using pip:</p>
+<div class="highlight-python"><pre>$ pip install django-dynamite</pre>
+</div>
+</div>
+<div class="section" id="quick-start">
+<span id="quickstart"></span><h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
 <p>Take a look to <tt class="docutils literal"><span class="pre">example</span></tt> project, try it and enjoy:</p>
 <div class="highlight-python"><pre>cd example
 python manage.py test
 python manage.py syncdb
 python manage.py runserver</pre>
 </div>
-</div>
-<div class="section" id="building-installing">
-<h1>Building / Installing<a class="headerlink" href="#building-installing" title="Permalink to this headline">¶</a></h1>
-<p>You can just use <tt class="docutils literal"><span class="pre">setup.py</span></tt> to build and install <tt class="docutils literal"><span class="pre">django-dynamite</span></tt>:</p>
-<div class="highlight-python"><pre>$ python setup.py bdist_egg</pre>
-</div>
-<p>Once built, you can use easy_install on the python egg.</p>
 </div>
 <div class="section" id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
@@ -117,8 +116,8 @@ python manage.py runserver</pre>
 </div>
 <p>Or simply click <a class="reference external" href="http://z4r.github.com/django-dynamite/">Dynamite Documentation</a></p>
 </div>
-<div class="section" id="contents">
-<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h1>Contents<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="models.html">1. Abstract Dynamic Models</a></li>
@@ -147,12 +146,14 @@ python manage.py runserver</pre>
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">django-dynamite&#8217;s docs</a></li>
+<li><a class="reference internal" href="#">django-dynamite&#8217;s docs</a><ul>
 <li><a class="reference internal" href="#dynamic-models-framework">Dynamic models framework</a></li>
-<li><a class="reference internal" href="#quick-start">Quick start</a></li>
-<li><a class="reference internal" href="#building-installing">Building / Installing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
-<li><a class="reference internal" href="#contents">Contents</a><ul>
+<li><a class="reference internal" href="#id2">Contents</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
@@ -195,7 +196,7 @@ python manage.py runserver</pre>
         <li class="right" >
           <a href="models.html" title="1. Abstract Dynamic Models"
              >next</a> |</li>
-        <li><a href="#">django-dynamite 0.4.0 documentation</a> &raquo;</li> 
+        <li><a href="#">django-dynamite 0.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
