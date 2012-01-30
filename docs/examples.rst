@@ -38,7 +38,7 @@ Survey System
         entity = Response,
     )
 
-*survey.models.py*
+*survey.admin.py*
 
 ::
 
